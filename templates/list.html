@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Company DataTable</title>
+
+  <!-- Include Bootstrap CSS -->
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+
+  <!-- Include DataTables CSS -->
+  <link rel="stylesheet" href="https://cdn.datatables.net/1.10.23/css/jquery.dataTables.min.css">
+
+  <!-- Include Font Awesome -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css">
+
+</head>
+
+<body class="hold-transition sidebar-mini">
+
+  <!-- Main content -->
+  <div class="container mt-5">
+    <div class="card">
+      <div class="card-header bg-primary text-white">
+        <h3 class="card-title">Company DataTable</h3>
+        <!-- Add Companies button to open modal -->
+        <button type="button" class="btn btn-light float-right" data-toggle="modal" data-target="#addCompanyModal">
+          Add Company
+        </button>
+      </div>
+      <!-- /.card-header -->
+      <div class="card-body">
+        <table id="companyTable" class="table table-bordered table-striped">
+          <thead>
+            <tr>
+              <th>Company Name</th>
+              <th>Location</th>
+              <th>Number of Employees</th>
+              <th>Profit</th>
+              <th>Action</th>
+            </tr>
+          </thead>
+          <tbody>
+            <!-- Company data will be loaded dynamically using JavaScript -->
+          </tbody>
+        </table>
+      </div>
+      <!-- /.card-body -->
+    </div>
+    <!-- /.card -->
+  </div>
+
+  <!-- Modal for adding a new company -->
+  <div class="modal fade" id="addCompanyModal" tabindex="-1" role="dialog" aria-labelledby="addCompanyModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header bg-primary text-white">
+          <h5 class="modal-title" id="addCompanyModalLabel">Add Company</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <!-- Add your form fields for adding a new company -->
+          <form id="addCompanyForm">
+            <div class="form-group">
+              <label for="companyName">Company Name</label>
+              <input type="text" class="form-control" id="companyName" name="companyName" required>
+            </div>
+            <div class="form-group">
+              <label for="companyLocation">Location</label>
+              <input type="text" class="form-control" id="companyLocation" name="companyLocation" required>
+            </div>
+            <div class="form-group">
+              <label for="employeeCount">Number of Employees</label>
+              <input type="number" class="form-control" id="employeeCount" name="employeeCount" required>
+            </div>
+            <div class="form-group">
+              <label for="companyProfit">Profit</label>
+              <input type="text" class="form-control" id="companyProfit" name="companyProfit" required>
+            </div>
+            <button type="submit" class="btn btn-primary">Add Company</button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Include jQuery, Popper.js, Bootstrap JS, and DataTables JS -->
+  <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+  <script src="https://cdn.datatables.net/1.10.23/js/jquery.dataTables.min.js"></script>
+
+  <!-- Add DataTable initialization script -->
+  <script>
+    $(document).ready(function () {
+      // Initialize DataTable
+      var table = $('#companyTable').DataTable({
+        searching: true, // Enable search functionality
+        columns: [
+          null,
+          null,
+          null,
+          null,
+          { // Add a column for the Action buttons
+            orderable: false,
+            searchable: false,
+            data: null,
+            defaultContent: '<button type="button" class="btn btn-danger btn-sm delete-button">Delete</button>'
+          }
+        ]
+      });
+
+      // Load company data dynamically
+      // Note: Replace this with your actual Django data retrieval logic
+      var data = [
+        ["Company A", "Location A", 100, "$10M"],
+        ["Company B", "Location B", 200, "$20M"],
+        ["Company C", "Location C", 150, "$15M"],
+      ];
+
+      table.rows.add(data).draw();
+
+      // Handle form submission for adding a new company
+      $('#addCompanyForm').submit(function (e) {
+        e.preventDefault();
+        var formData = $(this).serializeArray();
+        // Process the form data and add a new row to the DataTable
+        table.row.add([
+          formData[0].value, formData[1].value, formData[2].value, formData[3].value
+        ]).draw(false);
+        // Close the modal
+        $('#addCompanyModal').modal('hide');
+      });
+
+      // Handle delete button click
+      $('#companyTable tbody').on('click', '.delete-button', function () {
+        var row = table.row($(this).parents('tr'));
+        table.row(row).remove().draw();
+      });
+    });
+  </script>
+</body>
+
+</html>
