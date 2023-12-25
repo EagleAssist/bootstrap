@@ -7,8 +7,8 @@ from rest_framework.permissions import IsAuthenticated
 from .serializers import UserSerializer
 
 class LoginView(APIView):
-    authentication_classes = [SessionAuthentication]
-    permission_classes = [IsAuthenticated]
+    # authentication_classes = [SessionAuthentication]
+    # permission_classes = [IsAuthenticated]
 
     def get(self, request):
         return render(request, 'login.html')
